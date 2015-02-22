@@ -9,9 +9,8 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 group :development, :test do
-  gem 'byebug'
+  #gem 'byebug'
   gem 'web-console', '~> 2.0'
-  gem 'spring'
 end
 gem 'bootstrap-sass'
 gem 'puma'
@@ -20,7 +19,6 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
   gem 'rails_layout'
-  gem 'spring-commands-rspec'
 end
 group :development, :test do
   gem 'factory_girl_rails'

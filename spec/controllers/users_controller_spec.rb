@@ -42,10 +42,34 @@ describe UsersController do
     end
   end
 
+  describe 'update' do
+
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+    end
+
+    it 'updates the user' do
+      put :update, { :id => @user.id, :user => { :name => 'Update new user' } }
+      expect(response).to redirect_to('/users')
+      expect(User.find(@user.id).name).to eq('Update new user')
+    end
+  end
+
   describe 'create' do
 
     it 'shows the user' do
       expect{post(:create, { :user => { :name => 'Brand new user' }})}.to change{User.count}.by(1)
+      expect(response).to redirect_to('/users')
+      expect(User.last.name).to eq('Brand new user')
+    end
+  end
+
+  describe 'destroy' do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+    end
+    it 'destroys the user' do
+      expect { delete(:destroy, :id => @user) }.to change{User.count}.by(-1)
       expect(response).to redirect_to('/users')
     end
   end

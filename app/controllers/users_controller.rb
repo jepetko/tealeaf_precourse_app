@@ -24,10 +24,11 @@ class UsersController < ApplicationController
   end
 
   def update
+    user_hash = params[:user]
     @user = User.find(params[:id])
-    @user.update_attributes(name: params[:name])
+    @user.update_attributes(name: user_hash[:name])
     respond_to do |format|
-      format.html
+      format.html { redirect_to action: :index}
       format.json { render json: @user.to_json }
     end
   end
@@ -43,6 +44,14 @@ class UsersController < ApplicationController
   def create
     user_hash = params[:user]
     @user = User.create!(name: user_hash[:name])
+    respond_to do |format|
+      format.html { redirect_to action: :index }
+      format.json { render json: @user.to_json }
+    end
+  end
+
+  def destroy
+    User.destroy(params[:id])
     respond_to do |format|
       format.html { redirect_to action: :index }
       format.json { render json: @user.to_json }

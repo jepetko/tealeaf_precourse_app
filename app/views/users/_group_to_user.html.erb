@@ -1,0 +1,7 @@
+<%= simple_form_for @user do |f|%>
+    <%
+       available_groups = Group.all.select { |group| !@user.groups.include?(group) }
+    %>
+    <%= f.select :groups, available_groups.map { |group| [group.name, group.id, { class: group.id }] } %>
+    <%= f.button :submit %>
+<% end %>

@@ -26,7 +26,13 @@ class UsersController < ApplicationController
   def update
     user_hash = params[:user]
     @user = User.find(params[:id])
-    @user.update_attributes(name: user_hash[:name])
+    if user_hash[:groups]
+      @user.groups << Group.where(id: user_hash[:groups])
+    end
+    if user_hash[:name]
+      @user.name = user_hash[:name]
+    end
+    @user.save!
     respond_to do |format|
       format.html { redirect_to action: :index}
       format.json { render json: @user.to_json }

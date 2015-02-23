@@ -5,5 +5,13 @@
   <%= @user.name %>
 </p>
 
+<%= render 'group_to_user', :user => @user %>
+
+<ul>
+  <% @user.groups.each do |group| %>
+  <li><%=group.name%></li>
+  <% end %>
+</ul>
+
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

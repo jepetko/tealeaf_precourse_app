@@ -48,11 +48,41 @@ describe UsersController do
       @user = FactoryGirl.create(:user)
     end
 
-    it 'updates the user' do
-      put :update, { :id => @user.id, :user => { :name => 'Update new user' } }
-      expect(response).to redirect_to('/users')
-      expect(User.find(@user.id).name).to eq('Update new user')
+    context 'user name changed' do
+      it 'updates the user' do
+        put :update, { :id => @user.id, :user => { :name => 'Update new user' } }
+        expect(response).to redirect_to('/users')
+        expect(User.find(@user.id).name).to eq('Update new user')
+      end
     end
+
+    context 'group was added' do
+
+      before(:each) do
+        @group = FactoryGirl.create(:group)
+      end
+
+      it 'adds the group to user\'s relationships' do
+        expect { put :update, { :id => @user.id, :user => { :groups => @group.id }} }.to change{@user.groups.count}.by(1)
+        expect(response).to redirect_to('/users')
+        expect(@user.groups.last.name).to eq(@group.name)
+      end
+    end
+
+    context 'name is nil or empty' do
+      it 'rejects the passed values' do
+        expect { put :update, { :id => @user.id, :user => { :name => '' }} }.not_to change { @user }
+        expect(response.body).to match('can\'t be blank')
+      end
+    end
+
+    context 'group doesnt exist' do
+      it 'rejects the update of the user' do
+        expect { put :update, { :id => @user.id, :user => { :groups => 1000 }} }.not_to change { @user }
+        expect(response.body).to match('Group id 1000 doesn&#39;t exist')
+      end
+    end
+
   end
 
   describe 'create' do

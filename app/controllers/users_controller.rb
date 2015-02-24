@@ -26,16 +26,28 @@ class UsersController < ApplicationController
   def update
     user_hash = params[:user]
     @user = User.find(params[:id])
+
     if user_hash[:groups]
-      @user.groups << Group.where(id: user_hash[:groups])
+      group = Group.where(id: user_hash[:groups])
+      if group.empty?
+        @user.errors.add(:groups, "Group id #{user_hash[:groups]} doesn't exist")
+      else
+        @user.groups << group.first
+      end
     end
-    if user_hash[:name]
+
+    if user_hash[:name] && @user.name != user_hash[:name]
       @user.name = user_hash[:name]
+      @user.save
     end
-    @user.save!
     respond_to do |format|
-      format.html { redirect_to action: :index}
-      format.json { render json: @user.to_json }
+      if !@user.errors.empty?
+        format.html { render :new }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      else
+        format.html { redirect_to users_path }
+        format.json { render :index }
+      end
     end
   end
 

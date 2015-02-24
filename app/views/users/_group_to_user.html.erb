@@ -1,7 +1,10 @@
+<% if !@user.errors.messages[:groups].empty? %>
+   <% @user.errors.messages[:groups].each do |message| %>
+        <div class="alert alert-danger" role="alert"><%=message%></div>
+   <% end %>
+<% end %>
+
 <%= simple_form_for @user do |f|%>
-    <%
-       available_groups = Group.all.select { |group| !@user.groups.include?(group) }
-    %>
-    <%= f.select :groups, available_groups.map { |group| [group.name, group.id, { class: group.id }] } %>
+    <%= f.select :groups, Group.available_groups(@user).map { |group| [group.name, group.id] } %>
     <%= f.button :submit %>
 <% end %>

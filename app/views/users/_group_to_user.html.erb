@@ -1,4 +1,4 @@
-<% if !@user.errors.messages[:groups].empty? %>
+<% if !@user.errors.empty? %>
    <% @user.errors.messages[:groups].each do |message| %>
         <div class="alert alert-danger" role="alert"><%=message%></div>
    <% end %>
